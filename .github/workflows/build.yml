@@ -1,0 +1,33 @@
+name: Build AIESP APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Unzip Project
+        run: unzip AIESP.zip -d .
+        
+      - name: Download Model AI
+        run: |
+          mkdir -p AIESP/app/src/main/assets
+          wget https://github.com/neso613/yolo-v5-tflite-model/raw/main/model/yolov5s_f16.tflite -O AIESP/app/src/main/assets/detect.tflite
+          
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+      - name: Build with Gradle
+        run: |
+          cd AIESP
+          chmod +x gradlew
+          ./gradlew assembleDebug
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: AIESP-APK
+          path: AIESP/app/build/outputs/apk/debug/app-debug.apk
