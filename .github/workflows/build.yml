@@ -1,4 +1,4 @@
-name: Build AutoAim APK
+name: Build FakeLag APK
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -6,11 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Unzip Project
-        run: unzip AutoAim.zip -d .
-      - name: Download Model AI
-        run: |
-          mkdir -p AutoAim/app/src/main/assets
-          wget https://github.com/neso613/yolo-v5-tflite-model/raw/main/model/yolov5s_f16.tflite -O AutoAim/app/src/main/assets/detect.tflite
+        run: unzip FakeLagVPN.zip -d .
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with: { java-version: '17', distribution: 'temurin' }
@@ -19,10 +15,10 @@ jobs:
         with: { gradle-version: 7.5 }
       - name: Build with Gradle
         run: |
-          cd AutoAim
+          cd FakeLagVPN
           gradle assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AutoAim-APK
-          path: AutoAim/app/build/outputs/apk/debug/app-debug.apk
+          name: FakeLag-APK
+          path: FakeLagVPN/app/build/outputs/apk/debug/app-debug.apk
