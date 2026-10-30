@@ -1,33 +1,25 @@
-name: Build AIESP APK
+name: Build Light Aim APK
 on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Unzip Project
-        run: unzip AIESP.zip -d .
-        
-      - name: Download Model AI
-        run: |
-          mkdir -p AIESP/app/src/main/assets
-          wget https://github.com/neso613/yolo-v5-tflite-model/raw/main/model/yolov5s_f16.tflite -O AIESP/app/src/main/assets/detect.tflite
-          
+        run: unzip LightAim.zip -d .
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          
       - name: Build with Gradle
         run: |
-          cd AIESP
-          chmod +x gradlew
+          cd LightAim
+          chmod +x gradlew || echo "no gradlew" # Dự án mới chưa có gradlew, cần tạo bằng lệnh dưới
+          gradle wrapper --gradle-version 7.5
           ./gradlew assembleDebug
-          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AIESP-APK
-          path: AIESP/app/build/outputs/apk/debug/app-debug.apk
+          name: LightAim-APK
+          path: LightAim/app/build/outputs/apk/debug/app-debug.apk
